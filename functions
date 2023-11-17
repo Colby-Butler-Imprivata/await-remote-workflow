@@ -93,7 +93,7 @@ function curl_github_api() {
     shift
     local curl_opts=$@
     curl --silent --request GET \
-        -H "Authorization: Basic $AUTH_TOKEN" \
+        -H "Authorization: Bearer $AUTH_TOKEN" \
         -H "Accept: application/vnd.github.v3+json" \
         $url $curl_opts
 }
@@ -104,8 +104,7 @@ function trigger_workflow() {
     shift 2
     local workflow_inputs=$@
 
-
-    say DEBUG 'curl --silent --request POST --output /dev/stderr --write-out "%{http_code}" -H "Authorization: Basic $AUTH_TOKEN" -H "Accept: application/vnd.github.v3+json" $github_url --data "$workflow_inputs"'
+    #say DEBUG "curl --silent --request POST --output /dev/stderr --write-out \"%{http_code}\" -H \"Authorization: Basic $AUTH_TOKEN\" -H \"Accept: application/vnd.github.v3+json\" $github_url --data \"$workflow_inputs\""
 
     local curl_rc=$( \
         curl --silent \
