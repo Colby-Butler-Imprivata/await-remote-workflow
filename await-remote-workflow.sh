@@ -43,7 +43,7 @@ while true ; do
 done
 
 WAIT_TIMEOUT_MINUTES=${WAIT_TIMEOUT_MINUTES:-${DEFAULT_WAIT_TIMEOUT_MINUTES}}
-TRIGGER_UUID_VALUE=$(generate_uuid)
+CI_UUID_VALUE=$(generate_uuid)
 
 ###########################################################################################
 ###################################### MAIN WORKFLOW ######################################
@@ -57,15 +57,15 @@ verify_option_was_provided WORKFLOW_REPO   "--workflow-repo"
 verify_option_was_provided WORKFLOW_YAML   "--workflow-yaml"
 verify_option_was_provided WORKFLOW_BRANCH "--workflow-branch"
 
-# Since the '--workflow-inputs' option requires *some* argument, 
-# I wanted to refrain from having to specify it inside the variables 
+# Since the '--workflow-inputs' option requires *some* argument,
+# I wanted to refrain from having to specify it inside the variables
 # that are passed to 'action.yaml', therefore I'm setting the default
 # value of inputs to 'none' and nullifying it here below if it is not provided by the user;
 
-mandatory_inputs="{\"ref\": \"$WORKFLOW_BRANCH\", \"inputs\": {\"trigger_uuid\": \"$TRIGGER_UUID_VALUE\"}}"
+mandatory_inputs="{\"ref\": \"$WORKFLOW_BRANCH\", \"inputs\": {\"ci_uuid\": \"$CI_UUID_VALUE\"}}"
 
 if [[ $WORKFLOW_INPUTS == "none" || -z $WORKFLOW_INPUTS ]] ; then
-    curl_post_input_data="{\"ref\": \"$WORKFLOW_BRANCH\", \"inputs\": {\"trigger_uuid\": \"$TRIGGER_UUID_VALUE\"}}"
+    curl_post_input_data="{\"ref\": \"$WORKFLOW_BRANCH\", \"inputs\": {\"ci_uuid\": \"$CI_UUID_VALUE\"}}"
     #declare WORKFLOW_INPUTS=""
 else
     curl_post_input_data=$(jq -c '.inputs += '"$WORKFLOW_INPUTS"''<<<"$mandatory_inputs")
@@ -81,7 +81,7 @@ trigger_workflow \
     "$curl_post_input_data"
 
 wait_for_status \
-    $TRIGGER_UUID_VALUE \
+    $CI_UUID_VALUE \
     $WORKFLOW_BASE_URL \
     $WAIT_TIMEOUT_MINUTES
 

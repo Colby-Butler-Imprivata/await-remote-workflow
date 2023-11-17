@@ -13,7 +13,7 @@ In this document I’ll describe how my solution is implemented by harnessing Gi
     on:
       workflow_dispatch:
         inputs:
-          trigger_uuid:
+          ci_uuid:
             description: 'the trigger UUIID for which we will create an artifact'
             required: false
 
@@ -22,21 +22,21 @@ In this document I’ll describe how my solution is implemented by harnessing Gi
         runs-on: ubuntu-latest
         steps:
         - name: Create Run UUID Artifact
-          if: github.event.inputs.trigger_uuid != ''
+          if: github.event.inputs.ci_uuid != ''
           run: |
               echo $GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID | \
-                  tee /tmp/${{ github.event.inputs.trigger_uuid }}
+                  tee /tmp/${{ github.event.inputs.ci_uuid }}
         - name: Deploy an Environment
           run: ...
 
         - name: Upload UUID As An Artifact
           uses: actions/upload-artifact@v2
-          if: ${{ always() && github.event.inputs.trigger_uuid != '' }}
+          if: ${{ always() && github.event.inputs.ci_uuid != '' }}
           with:
-            name: ${{ github.event.inputs.trigger_uuid }}
-            path: /tmp/${{ github.event.inputs.trigger_uuid }}
+            name: ${{ github.event.inputs.ci_uuid }}
+            path: /tmp/${{ github.event.inputs.ci_uuid }}
 
-As you can see, we define an optional ‘trigger_uuid’ input for this workflow, which we’ll use when we remotely trigger this workflow.  In the ‘jobs’ section, the first step is to write the full URL of this workflow to a temp file. The file name is the value of ‘trigger_uuid’. We’ll later query this URL in ‘workflow2’ and gather the exit status of ‘workflow1’. We then proceed to execute as many steps as we’d like, but wrap up the workflow with the  ‘Upload UUID As An artifact' step. This would upload the temp file we created earlier on as an artifact of this workflow. Notice that this step would only run when 'trigger_uuid’ is given as input, so scheduled runs (if any) or manual runs will not be affected.
+As you can see, we define an optional ‘ci_uuid’ input for this workflow, which we’ll use when we remotely trigger this workflow.  In the ‘jobs’ section, the first step is to write the full URL of this workflow to a temp file. The file name is the value of ‘ci_uuid’. We’ll later query this URL in ‘workflow2’ and gather the exit status of ‘workflow1’. We then proceed to execute as many steps as we’d like, but wrap up the workflow with the  ‘Upload UUID As An artifact' step. This would upload the temp file we created earlier on as an artifact of this workflow. Notice that this step would only run when 'ci_uuid’ is given as input, so scheduled runs (if any) or manual runs will not be affected.
 
 ‘Workflow B’ YAML Configuration (the one that triggers)
 
