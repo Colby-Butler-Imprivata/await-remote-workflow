@@ -26,6 +26,9 @@ if [ $? != 0 ] ; then
     exit 1
 fi
 
+echo "DEBUGDEBUG"
+echo "$@"
+
 eval set -- "$OPTS"
 
 while true ; do
