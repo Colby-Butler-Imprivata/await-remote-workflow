@@ -58,7 +58,7 @@ verify_option_was_provided WORKFLOW_REPO   "--workflow-repo"
 verify_option_was_provided WORKFLOW_YAML   "--workflow-yaml"
 verify_option_was_provided WORKFLOW_BRANCH "--workflow-branch"
 
-if [[ -z "${TOKEN_TYPE}" ]]; then TOKEN_TYPE="Basic"; else TOKEN_TYPE="Bearer"; fi
+if [[ -z "${TOKEN_TYPE}" ]]; then TOKEN_TYPE="Basic"; fi
 
 # Since the '--workflow-inputs' option requires *some* argument,
 # I wanted to refrain from having to specify it inside the variables
