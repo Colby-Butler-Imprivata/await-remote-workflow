@@ -17,8 +17,8 @@ source $SCRIPT_FULLPATH/variables || exit 1
 source $SCRIPT_FULLPATH/table_functions || exit 1
 
 # Process options
-SHORT_OPTS="ha:b:i:w:o:r:y:"
-LONG_OPTS="help,auth-token:,workflow-inputs:,workflow-branch:,wait-timeout-minutes:,workflow-repo:,workflow-yaml:,workflow-org:"
+SHORT_OPTS="ha:b:i:w:o:r:y:t:"
+LONG_OPTS="help,auth-token:,workflow-inputs:,workflow-branch:,wait-timeout-minutes:,workflow-repo:,workflow-yaml:,workflow-org:,token-type:"
 OPTS=$(getopt -o $SHORT_OPTS -l $LONG_OPTS -n "$0" -- "$@")
 
 if [ $? != 0 ] ; then
@@ -32,6 +32,7 @@ while true ; do
     case "$1" in
         -h|--help) usage ; exit 0;;
         -a|--auth-token) AUTH_TOKEN=$(echo -n $2 | base64) ; shift 2;;
+        -t|--token-type) TOKEN_TYPE=$2 ; shift 2;;
         -o|--workflow-org) WORKFLOW_ORG=$2 ; shift 2;;
         -r|--workflow-repo) WORKFLOW_REPO=$2 ; shift 2;;
         -y|--workflow-yaml) WORKFLOW_YAML=$2 ; shift 2;;
@@ -56,6 +57,8 @@ verify_option_was_provided WORKFLOW_ORG    "--workflow-org"
 verify_option_was_provided WORKFLOW_REPO   "--workflow-repo"
 verify_option_was_provided WORKFLOW_YAML   "--workflow-yaml"
 verify_option_was_provided WORKFLOW_BRANCH "--workflow-branch"
+
+if [[ -z "${TOKEN_TYPE}" ]]; then TOKEN_TYPE="Basic"; else TOKEN_TYPE="Bearer"; fi
 
 # Since the '--workflow-inputs' option requires *some* argument,
 # I wanted to refrain from having to specify it inside the variables
