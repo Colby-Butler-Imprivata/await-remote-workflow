@@ -93,7 +93,7 @@ function curl_github_api() {
     shift
     local curl_opts=$@
     curl --silent --request GET \
-        -H "Authorization: $TOKEN_TYPE $AUTH_TOKEN" \
+        -H "Authorization: $AUTH_TOKEN" \
         -H "Accept: application/vnd.github.v3+json" \
         $url $curl_opts
 }
@@ -109,7 +109,7 @@ function trigger_workflow() {
              --request POST \
              --output /dev/stderr \
              --write-out "%{http_code}" \
-             -H "Authorization: $TOKEN_TYPE $AUTH_TOKEN" \
+             -H "Authorization: $AUTH_TOKEN" \
              -H "Accept: application/vnd.github.v3+json" \
              $github_url --data "$workflow_inputs")
 
