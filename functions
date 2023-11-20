@@ -118,6 +118,7 @@ function trigger_workflow() {
     say DEBUG "$AUTH_TOKEN"
     say DEBUG "$github_url"
     say DEBUG "$workflow_inputs"
+    say DEBUG "curl --silent --request POST --output /dev/stderr --write-out \"%{http_code}\" -H \"Authorization: $TOKEN_TYPE $AUTH_TOKEN\" -H \"Accept: application/vnd.github.v3+json\" $github_url --data \"$workflow_inputs\""
 
     if test $curl_rc -eq 204 ; then
         say INFO "Successfully triggered: $github_url"
