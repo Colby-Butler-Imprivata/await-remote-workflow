@@ -5,8 +5,7 @@ description: 'Triggers a remote workflow and waits for it to complete'
 inputs:
   workflow-org:
     description: 'the worklflow"s organization/username on Github'
-    required: false
-    default: 'anecdotes-ai'
+    required: true
   workflow-repo:
     description: 'the workflow"s Github repository/project name'
     required: true
@@ -23,6 +22,9 @@ inputs:
   github-auth-token:
     description: 'the Github authentication token to use for POST/GET requests on Github'
     required: true
+  token-type:
+    description: 'Bearer vs Basic'
+    required: false
   wait-timeout-in-minutes:
     description: 'how long we wait for the triggered workflow to complete'
     required: 'false'
@@ -37,6 +39,7 @@ runs:
         --workflow-yaml ${{ inputs.workflow-yaml }} \
         --workflow-branch ${{ inputs.workflow-branch }} \
         --auth-token ${{ inputs.github-auth-token }} \
+        --token-type ${{ inputs.token-type }} \
         --wait-timeout-minutes ${{ inputs.wait-timeout-in-minutes }} \
         --workflow-inputs "${{ inputs.workflow-inputs }}"
       shell: bash
