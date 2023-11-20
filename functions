@@ -103,6 +103,7 @@ function trigger_workflow() {
     local workflow_branch=$2
     shift 2
     local workflow_inputs=$@
+    #local escaped_inputs=$(echo ${workflow_inputs} | sed 's/["]/\\\"/g')
 
     local curl_rc=$( \
         curl --silent \
@@ -113,19 +114,12 @@ function trigger_workflow() {
              -H "Accept: application/vnd.github.v3+json" \
              $github_url --data "$workflow_inputs")
 
-    say DEBUG "POST request - Token type: $TOKEN_TYPE - JSON Data: $workflow_inputs"
-    say DEBUG "$TOKEN_TYPE"
-    say DEBUG "$AUTH_TOKEN"
-    say DEBUG "$github_url"
-    say DEBUG "$workflow_inputs"
-    say DEBUG "curl --silent --request POST --output /dev/stderr --write-out \"%{http_code}\" -H \"Authorization: $TOKEN_TYPE $AUTH_TOKEN\" -H \"Accept: application/vnd.github.v3+json\" $github_url --data \"$workflow_inputs\""
-
-
     if test $curl_rc -eq 204 ; then
         say INFO "Successfully triggered: $github_url"
         return 0
     fi
 
+    say DEBUG "curl --silent --request POST --output /dev/stderr --write-out \"%{http_code}\" -H \"Authorization: $TOKEN_TYPE ****\" -H \"Accept: application/vnd.github.v3+json\" $github_url --data \"$workflow_inputs\""
     die 1 "failed to trigger: $github_url, curl exit code: $curl_rc"
 }
 

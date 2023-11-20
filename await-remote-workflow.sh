@@ -26,15 +26,12 @@ if [ $? != 0 ] ; then
     exit 1
 fi
 
-echo "DEBUGDEBUG"
-echo "$@"
-
 eval set -- "$OPTS"
 
 while true ; do
     case "$1" in
         -h|--help) usage ; exit 0;;
-        -a|--auth-token) AUTH_TOKEN=$(echo -n $2 | base64) ; shift 2;;
+        -a|--auth-token) AUTH_TOKEN=$2 ; shift 2;;
         -t|--token-type) TOKEN_TYPE=$2 ; shift 2;;
         -o|--workflow-org) WORKFLOW_ORG=$2 ; shift 2;;
         -r|--workflow-repo) WORKFLOW_REPO=$2 ; shift 2;;
@@ -76,6 +73,8 @@ if [[ $WORKFLOW_INPUTS == "none" || -z $WORKFLOW_INPUTS ]] ; then
 else
     curl_post_input_data=$(jq -c '.inputs += '"$WORKFLOW_INPUTS"''<<<"$mandatory_inputs")
 fi
+#echo ===============
+#echo $curl_post_input_data
 
 # Building the relevant URLs based on user input;
 WORKFLOW_BASE_URL="$GITHUB_API_BASEURL/$WORKFLOW_ORG/$WORKFLOW_REPO/actions"
