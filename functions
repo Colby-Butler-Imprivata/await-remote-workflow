@@ -103,7 +103,6 @@ function trigger_workflow() {
     local workflow_branch=$2
     shift 2
     local workflow_inputs=$@
-    #local escaped_inputs=$(echo ${workflow_inputs} | sed 's/["]/\\\"/g')
 
     local curl_rc=$( \
         curl --silent \
@@ -197,7 +196,7 @@ function wait_for_status() {
         # Loop over all URLs and check for Job ID we triggered earlier;
         local all_job_urls=$(get_jobs_urls "$workflow_base_url/runs?created=>$(date_iso8601)")
         for url in $all_job_urls ; do
-            say INFO "Polling Job URL: $url"
+            say INFO "Polling Job URL: $url for Step Named: $artifact_uuid"
             #curl_github_api $url
             local job_id=$(curl_github_api $url | jq '.jobs[] | select(.steps[].name == "'"$artifact_uuid"'") | .id' 2> /dev/null)
             if [[ -n $job_id ]] ; then
