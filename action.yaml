@@ -33,7 +33,7 @@ runs:
   using: "composite"
   steps:
     - run: |
-        ${{ github.action_path }}/await-remote-workflow.sh \
+        $GITHUB_ACTION_PATH/await-remote-workflow.sh \
         --workflow-org ${{ inputs.workflow-org }} \
         --workflow-repo ${{ inputs.workflow-repo }} \
         --workflow-yaml ${{ inputs.workflow-yaml }} \
